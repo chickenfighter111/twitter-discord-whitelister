@@ -20,7 +20,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.token);
 const authClient = new auth.OAuth2User({
     client_id: process.env.cid,
     client_secret: process.env.oauth_cid,
-    callback: "http://localhost:3000",
+    callback: "https://discordtwitterbotz.herokuapp.com/",
     scopes: ["tweet.read", "users.read", "offline.access"],
   });
 const twitter_client = new TClient(authClient);
