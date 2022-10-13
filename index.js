@@ -59,7 +59,7 @@ async function whitelist(interaction){
 
 
 async function fetchTweetById(interaction, twitter) {
-    console.log(`Request initiated by ${interaction.member.user.tag}`)
+    //console.log(`Request initiated by ${interaction.member.user.tag}`)
    // const someUser = await User.find({user: interaction.member.user.tag}).exec();
     //console.log(someUser)
 
@@ -117,7 +117,7 @@ async function fetchTweetById(interaction, twitter) {
             }
         }
         catch(err){
-        //    console.log(`API error: ${err}`)
+            console.log(`API error: ${err}`)
         }
     };
   }
@@ -146,20 +146,15 @@ client.on('ready', () => {
                     "tweet.fields": "created_at"
                 })
         
-                //console.log(pinnedTweet.data)
                 if (pinnedTweet.data != null || pinnedTweet.data != undefined){
-                   // console.log(pinnedTweet.data)
                     const isPinned = whitelisted(getHours(pinnedTweet.data.created_at));
                     const filter = { twitter: username };
                     const update = { token: token };
                     if(isPinned){
-                        //console.log(someTwitterUser)
                         const verifiedRole = guild.roles.cache.get("1026904133011251331");
                         const guildMember = await guild.members.fetch(someTwitterUser.user)
-                       // console.log(guildMember)
                         await guildMember.roles.add(verifiedRole)
                         await User.deleteOne({_id: someTwitterUser.id})
-                       // console.log("You are now whitelisted!")
                     }
                 }
             }
@@ -180,23 +175,11 @@ client.on('ready', () => {
     }
   })
 
-  app.get('/login', function (req, res) {
-    const atime = "2022-10-08T10:52:50.000Z";
-    const date1 = new Date(atime);
-    const now = Date.now();
-    const deltatimeS = now - date1.getTime();
-    const secs = (deltatimeS/1000)
-    const h = secs/86400
-    res.send(h.toString())
-
-   // res.redirect('/')
-  })
-
   app.listen(PORT, async() => {
-   // console.log(`App listening on port ${PORT}`)
+    console.log(`App listening on port ${PORT}`)
     await mongoose.connect(dbURI, {ssl: true})
     .then(() => {
-      //  console.log("connected to databse!")
+        console.log("connected to database!")
     })
     .catch(err => {
         //console.log(err)
