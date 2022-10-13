@@ -1,22 +1,25 @@
+require('dotenv').config()
+
 const { Client: TClient, auth } = require("twitter-api-sdk");
 const mongoose = require('mongoose');
 const axios = require('axios');
 const open = require('open');
 
-const {token, clientId, guildId, bearer_token, cid, oauth_cid} = require("./config.json")
+
+//const {token, clientId, guildId, bearer_token, cid, oauth_cid} = require("./config.json")
 const { Client, GatewayIntentBits, REST, SlashCommandBuilder, Collection, Routes, PermissionFlagsBits, 
     ChannelType, GuildTextBasedChannel, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, InteractionType } = require('discord.js');
 const User = require("./models/user");
 
 const STATE = "my-state";
-const dbURI = "mongodb+srv://snghbeer:aFOTpQy7GjLLqjyS@cluster0.8lhrynx.mongodb.net/?retryWrites=true&w=majority";
+const dbURI = process.env.dbURI;
 const PORT = 3000;
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-const rest = new REST({ version: '10' }).setToken(token);
+const rest = new REST({ version: '10' }).setToken(process.env.token);
 
 const authClient = new auth.OAuth2User({
-    client_id: cid,
-    client_secret: oauth_cid,
+    client_id: process.env.cid,
+    client_secret: process.env.oauth_cid,
     callback: "http://localhost:3000",
     scopes: ["tweet.read", "users.read", "offline.access"],
   });
@@ -136,27 +139,39 @@ client.on('ready', () => {
 
         const someTwitterUser = (await User.find({twitter: username.toLowerCase()}).exec())[0];
         if (someTwitterUser){
-            const guild = await client.guilds.fetch("728233239998627842");
+            const guild = await client.guilds.fetch(process.env.guildId);
             const pinnedTweetId = user.data.pinned_tweet_id;
-            const pinnedTweet = await twitter_client.tweets.findTweetById(pinnedTweetId, {
-                "tweet.fields": "created_at"
-            })
-    
-            //console.log(pinnedTweet.data)
-            if (pinnedTweet.data != null || pinnedTweet.data != undefined){
-               // console.log(pinnedTweet.data)
-                const isPinned = whitelisted(getHours(pinnedTweet.data.created_at));
-                const filter = { twitter: username };
-                const update = { token: token };
-                if(isPinned){
-                    //console.log(someTwitterUser)
-                    const verifiedRole = guild.roles.cache.get("1026904133011251331");
-                    const guildMember = await guild.members.fetch(someTwitterUser.user)
-                   // console.log(guildMember)
-                    await guildMember.roles.add(verifiedRole)
-                    await User.deleteOne({_id: someTwitterUser.id})
-                   // console.log("You are now whitelisted!")
+            if (pinnedTweetId){
+                const pinnedTweet = await twitter_client.tweets.findTweetById(pinnedTweetId, {
+                    "tweet.fields": "created_at"
+                })
+        
+                //console.log(pinnedTweet.data)
+                if (pinnedTweet.data != null || pinnedTweet.data != undefined){
+                   // console.log(pinnedTweet.data)
+                    const isPinned = whitelisted(getHours(pinnedTweet.data.created_at));
+                    const filter = { twitter: username };
+                    const update = { token: token };
+                    if(isPinned){
+                        //console.log(someTwitterUser)
+                        const verifiedRole = guild.roles.cache.get("1026904133011251331");
+                        const guildMember = await guild.members.fetch(someTwitterUser.user)
+                       // console.log(guildMember)
+                        await guildMember.roles.add(verifiedRole)
+                        await User.deleteOne({_id: someTwitterUser.id})
+                       // console.log("You are now whitelisted!")
+                    }
                 }
+            }
+            else{
+                await User.deleteOne({_id: someTwitterUser.id});
+                /*client.channels.fetch('1026904667730477076').then(async(channel) => {
+                    console.log(channel)
+                    channel.send({
+                        content: "There is no pinned tweet!",
+                        ephemeral: true
+                    })
+                }) */
             }
         }
     }
@@ -198,6 +213,7 @@ client.on('interactionCreate', async (interaction) => {
                 client.channels.fetch('1026904667730477076').then(async(channel) => {
                     //console.log(channel)
                     await channel.send({
+                        
                         embeds: [
                             new EmbedBuilder()
                             .setDescription("Please verify")
@@ -316,7 +332,7 @@ client.on('interactionCreate', async (interaction) => {
 
 async function main(){
     try{
-        rest.put(Routes.applicationGuildCommands(clientId, guildId), 
+        rest.put(Routes.applicationGuildCommands(process.env.clientId, process.env.guildId), 
         {
             body: [
                 new SlashCommandBuilder()
@@ -336,7 +352,7 @@ async function main(){
 
                 ],
         })
-        await client.login(token);
+        await client.login(process.env.token);
     }
     catch(err){
        // console.log(err)
