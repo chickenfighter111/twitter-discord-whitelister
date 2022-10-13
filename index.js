@@ -13,7 +13,7 @@ const User = require("./models/user");
 
 const STATE = "my-state";
 const dbURI = process.env.dbURI;
-const PORT = 3000;
+const PORT = process.env.PORT || 3000 ;
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const rest = new REST({ version: '10' }).setToken(process.env.token);
 
@@ -79,7 +79,7 @@ async function fetchTweetById(interaction, twitter) {
     
             client.channels.fetch('1026904667730477076').then(async(channel) => {
                 //console.log(channel)
-                interaction.reply({
+                await interaction.reply({
                     embeds: [
                         new EmbedBuilder()
                         .setDescription(`Please verify here ${url}`)
@@ -260,21 +260,6 @@ client.on('interactionCreate', async (interaction) => {
                 const verifiedRole = interaction.guild.roles.cache.get("1026904133011251331");
                 if(verifiedRole){
                     const member = interaction.member;
-/*                    const userId = member.user.id
-                    //const user = await interaction.guild.members.fetch(userId);
-                    await interaction.guild.members.cache.get(userId).roles.add(verifiedRole)
-                     .then((msg) => interaction.reply({
-                        content: "You are now verified!",
-                        ephemeral: true
-                    }))
-                    .catch((err) => {
-                        console.log(err)
-                        interaction.reply({
-                            content: "Something went wrong!",
-                            ephemeral: true
-                        })
-                    }) */
-                   // console.log(user)
                     await member.roles.add(verifiedRole)
                     .then((msg) => interaction.reply({
                         content: "You are now verified!",
