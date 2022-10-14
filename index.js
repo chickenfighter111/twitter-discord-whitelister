@@ -64,6 +64,7 @@ async function fetchTweetById(interaction, twitter) {
     //console.log(someUser)
 
     if (authClient.isAccessTokenExpired()){
+        console.log("Adding new user")
         const aUser = new User({
             user:interaction.member.user.id,
             whitelisted: false,
