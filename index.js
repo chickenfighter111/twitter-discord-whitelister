@@ -112,7 +112,7 @@ async function fetchTweetById(interaction, twitter) {
                 if(isPinned){
                     const verifiedRole = interaction.guild.roles.cache.get("1026904133011251331");
                     const member = interaction.member;
-                    await member.roles.add(verifiedRole)
+                    member.roles.add(verifiedRole)
               //      console.log("You are now whitelisted!")
                 }
             }
