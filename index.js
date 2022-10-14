@@ -154,13 +154,13 @@ client.on('ready', () => {
                     if(isPinned){
                         const verifiedRole = guild.roles.cache.get("1026904133011251331");
                         const guildMember = await guild.members.fetch(someTwitterUser.user)
-                        await guildMember.roles.add(verifiedRole)
-                        await User.deleteOne({_id: someTwitterUser.id})
+                        guildMember.roles.add(verifiedRole)
+                        User.deleteOne({_id: someTwitterUser.id})
                     }
                 }
             }
             else{
-                await User.deleteOne({_id: someTwitterUser.id});
+                User.deleteOne({_id: someTwitterUser.id});
                 /*client.channels.fetch('1026904667730477076').then(async(channel) => {
                     console.log(channel)
                     channel.send({
