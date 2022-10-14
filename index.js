@@ -183,7 +183,7 @@ client.on('ready', () => {
         console.log("connected to database!")
     })
     .catch(err => {
-        //console.log(err)
+        console.log(err)
     });
   })
 
