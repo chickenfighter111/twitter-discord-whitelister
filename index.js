@@ -156,7 +156,6 @@ client.on('ready', () => {
                         const guildMember = await guild.members.fetch(someTwitterUser.user)
                         await guildMember.roles.add(verifiedRole)
                         await User.deleteOne({_id: someTwitterUser.id})
-                        res.send("You can now close this window")
                     }
                 }
             }
@@ -170,6 +169,7 @@ client.on('ready', () => {
                     })
                 }) */
             }
+            res.send("You can now close this window")   
         }
     }
     catch(err){
