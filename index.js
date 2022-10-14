@@ -169,8 +169,8 @@ client.on('ready', () => {
                     })
                 }) */
             }
-            res.send("You can now close this window")   
         }
+        res.send("You can now close this window")   
     }
     catch(err){
         console.log(`API error: ${err}`)
