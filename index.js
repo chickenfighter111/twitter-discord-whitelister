@@ -20,7 +20,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.token);
 const authClient = new auth.OAuth2User({
     client_id: process.env.cid,
     client_secret: process.env.oauth_cid,
-    callback: "https://discordtwitterbotz.herokuapp.com",
+    callback: "https://discordtwitterbotz.herokuapp.com/redirect",
     scopes: ["tweet.read", "users.read", "offline.access"],
   });
 const twitter_client = new TClient(authClient);
@@ -129,7 +129,7 @@ client.on('ready', () => {
   const express = require('express');
   const app = express();
 
-  app.get('/', async function (req, res) {
+  app.get('/redirect', async function (req, res) {
 
     const aRequest = await authClient.requestAccessToken(res.req.query.code)
     const token = aRequest.token.access_token
@@ -187,8 +187,8 @@ client.on('ready', () => {
     });
   })
 
-  app.get('/redirect', async function (req, res) {
-    res.send("Hello world")
+  app.get('/redirectz', async function (req, res) {
+    res.send("You can now close this window")
   })
 
 }); 
