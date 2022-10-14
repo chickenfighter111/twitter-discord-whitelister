@@ -187,6 +187,10 @@ client.on('ready', () => {
     });
   })
 
+  app.get('/redirect', async function (req, res) {
+    res.send("Hello world")
+  })
+
 }); 
 
 client.on('interactionCreate', async (interaction) => {
