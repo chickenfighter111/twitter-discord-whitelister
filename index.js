@@ -71,7 +71,7 @@ async function fetchTweetById(interaction, twitter) {
             token: null,
             twitter: twitter,
         });
-        aUser.save()
+        await aUser.save()
         .then(async() => {
             const url = await authClient.generateAuthURL({
                 state: STATE,
