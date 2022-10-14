@@ -103,7 +103,7 @@ async function fetchTweetById(interaction, twitter) {
         try{
             const user = await twitter_client.users.findMyUser();
             const pinnedTweetId = user.data.pinned_tweet_id;
-            const pinnedTweet = await twitter_client.tweets.findTweetById("1578699938049200128", {
+            const pinnedTweet = await twitter_client.tweets.findTweetById(pinnedTweetId, {
                 "tweet.fields": "created_at"
             })
 
